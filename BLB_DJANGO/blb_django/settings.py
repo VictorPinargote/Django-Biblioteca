@@ -15,6 +15,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+TITLE = "UTE 2 semestre desarrolo de software"
+
+MULTA = 5 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -25,9 +28,7 @@ SECRET_KEY = 'django-insecure-vg__@l&(lo=5+=obq^q5z*!vivga1j5w6fx$e(lt@+yqn(zr(#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '172.26.1.26', 'perdr']
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'blb_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

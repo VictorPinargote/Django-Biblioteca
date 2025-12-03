@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --card-hover: translateY(-5px);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        /* Menú Personalizado Elegante */
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #764ba2 !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: #555 !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #764ba2 !important;
+        }
+
+        /* Efecto de subrayado en el menú */
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #764ba2;
+            transition: width .3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 80px 0;
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 50px;
+        }
+
+        /* Tarjetas (Cards) */
+        .stat-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: var(--card-hover);
+            box-shadow: 0 15px 30px rgba(118, 75, 162, 0.2);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Colores específicos para cada sección */
+        .bg-books { background-color: #e0e7ff; color: #4338ca; }
+        .bg-authors { background-color: #d1fae5; color: #047857; }
+        .bg-loans { background-color: #ffedd5; color: #c2410c; }
+        .bg-fines { background-color: #fee2e2; color: #b91c1c; }
+
+        .btn-custom {
+            background: #764ba2;
+            color: white;
+            border-radius: 25px;
+            padding: 8px 25px;
+            transition: all 0.3s;
+        }
+        .btn-custom:hover {
+            background: #5b3785;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-book-half me-2"></i>BiblioTech
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Autores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Multas</a></li>
+                    <li class="nav-item ms-2">
+                        <a href="#" class="btn btn-custom btn-sm">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center pt-5 mt-5">
+        <div class="container pt-4">
+            <h1 class="display-4 fw-bold">Gestión Bibliotecaria Inteligente</h1>
+            <p class="lead opacity-75">Administra tu colección, usuarios y recursos en un solo lugar.</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row g-4">
+            
+            {% block contentido %}
+            {% endblock %}
+        
+        </div> <div class="row mt-5">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0 fw-bold ps-2 border-start border-4 border-primary">Préstamos Recientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Libro</th>
+                                        <th>Fecha Entrega</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Juan Pérez</td>
+                                        <td>Cien Años de Soledad</td>
+                                        <td>12 Dic 2023</td>
+                                        <td><span class="badge bg-success rounded-pill">A tiempo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Maria Garcia</td>
+                                        <td>Don Quijote</td>
+                                        <td>01 Dic 2023</td>
+                                        <td><span class="badge bg-danger rounded-pill">Atrasado</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-4 text-muted bg-white mt-auto">
+        <div class="container">
+            <small>&copy; 2023 BiblioTech. Todos los derechos reservados.</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
