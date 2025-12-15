@@ -1,31 +1,67 @@
 {% extends "index.html" %}
 
-{% block contentido %}
+{% block contenido %}
+<div class="col-12">
+    <div class="card shadow-sm">
+        <!-- Header -->
+        <div class="card-header text-white py-3 d-flex justify-content-between align-items-center"
+            style="background: #0891b2; border-radius: 16px 16px 0 0;">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-people-fill me-2"></i>Directorio de Autores
+            </h4>
+            <a href="{% url 'crear_autores' %}" class="btn btn-light rounded-pill px-3 fw-semibold">
+                <i class="bi bi-person-plus me-1"></i>Nuevo Autor
+            </a>
+        </div>
 
-<h2> AUTORES </h2>
-    <table style="border: 1px solid">
-        <tr style="border: 1px solid">
-            <td  style="border: 1px solid">Nombre</td>
-            <td  style="border: 1px solid">Apellido</td>
-            <td  style="border: 1px solid">Bibliografía</td>
-        </tr>
-        {% for autor in autores %}
-        <tr  style="border: 1px solid">
-            <td  style="border: 1px solid">
-                {{ autor.nombre }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ autor.apellido }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ autor.bibliografia}}
-            </td>
-            <td>
-                <a href="{% url 'editar_autor' autor.id %}">Editar</a>
-            </td>
-        </tr>
-        {% endfor %}
-
-    </table>
-
+        <!-- Body -->
+        <div class="card-body p-4">
+            {% if autores %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="bi bi-hash me-1"></i>ID</th>
+                            <th><i class="bi bi-person me-1"></i>Nombre</th>
+                            <th><i class="bi bi-person-badge me-1"></i>Apellido</th>
+                            <th><i class="bi bi-journal-text me-1"></i>Biografía</th>
+                            <th class="text-center"><i class="bi bi-gear me-1"></i>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for autor in autores %}
+                        <tr>
+                            <td class="text-muted">#{{ autor.id }}</td>
+                            <td class="fw-semibold">{{ autor.nombre }}</td>
+                            <td>{{ autor.apellido }}</td>
+                            <td>
+                                {% if autor.bibliografia %}
+                                <span class="text-muted">{{ autor.bibliografia|truncatewords:10 }}</span>
+                                {% else %}
+                                <span class="text-muted fst-italic">Sin biografía</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'editar_autor' autor.id %}"
+                                    class="btn btn-sm btn-outline-info rounded-pill px-3">
+                                    <i class="bi bi-pencil-square me-1"></i>Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-person-x display-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-4">No hay autores registrados</p>
+                <a href="{% url 'crear_autores' %}" class="btn btn-info rounded-pill px-4 text-white">
+                    <i class="bi bi-person-plus me-2"></i>Crear Primer Autor
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

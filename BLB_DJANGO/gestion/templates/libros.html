@@ -1,28 +1,64 @@
 {% extends "index.html" %}
 
-{% block contentido %}
+{% block contenido %}
+<div class="col-12">
+    <div class="card shadow-sm">
+        <!-- Header -->
+        <div class="card-header text-white py-3 d-flex justify-content-between align-items-center"
+            style="background: #1e40af; border-radius: 16px 16px 0 0;">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-book-fill me-2"></i>Catálogo de Libros
+            </h4>
+            <a href="{% url 'crear_libro' %}" class="btn btn-light rounded-pill px-3 fw-semibold">
+                <i class="bi bi-plus-circle me-1"></i>Nuevo Libro
+            </a>
+        </div>
 
-<h2> Libros </h2>
-    <table style="border: 1px solid">
-        <tr style="border: 1px solid">
-            <td  style="border: 1px solid">Titulo</td>
-            <td  style="border: 1px solid">Autor</td>
-            <td  style="border: 1px solid">Disponible</td>
-        </tr>
-        {% for libro in libros %}
-        <tr  style="border: 1px solid">
-            <td  style="border: 1px solid">
-                {{ libro.titulo }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ libro.autor }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ libro.disponible}}
-            </td>
-            </tr>
-        {% endfor %}
-
-    </table>
-
+        <!-- Body -->
+        <div class="card-body p-4">
+            {% if libros %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="bi bi-hash me-1"></i>ID</th>
+                            <th><i class="bi bi-book me-1"></i>Título</th>
+                            <th><i class="bi bi-person me-1"></i>Autor</th>
+                            <th class="text-center"><i class="bi bi-check-circle me-1"></i>Disponible</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for libro in libros %}
+                        <tr>
+                            <td class="text-muted">#{{ libro.id }}</td>
+                            <td class="fw-semibold">{{ libro.titulo }}</td>
+                            <td>{{ libro.autor }}</td>
+                            <td class="text-center">
+                                {% if libro.disponible %}
+                                <span class="badge bg-success rounded-pill">
+                                    <i class="bi bi-check-circle me-1"></i>Disponible
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger rounded-pill">
+                                    <i class="bi bi-x-circle me-1"></i>Prestado
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-4">No hay libros registrados</p>
+                <a href="{% url 'crear_libro' %}" class="btn btn-primary rounded-pill px-4">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Primer Libro
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

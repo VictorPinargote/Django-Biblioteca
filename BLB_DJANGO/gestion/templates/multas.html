@@ -1,36 +1,78 @@
 {% extends "index.html" %}
 
-{% block contentido %}
+{% block contenido %}
+<div class="col-12">
+    <div class="card shadow-sm">
+        <!-- Header -->
+        <div class="card-header text-white py-3 d-flex justify-content-between align-items-center"
+            style="background: #dc2626; border-radius: 16px 16px 0 0;">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>Registro de Multas
+            </h4>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold">
+                Total: {{ multas|length }}
+            </span>
+        </div>
 
-<h2> Multas </h2>
-    <table style="border: 1px solid">
-        <tr style="border: 1px solid">
-            <td  style="border: 1px solid">Prestamo</td>
-            <td  style="border: 1px solid">Tipo</td>
-            <td  style="border: 1px solid">Monto</td>
-            <td  style="border: 1px solid">Pagada</td>
-            <td  style="border: 1px solid">Fecha</td>
-        </tr>
-        {% for multa in multas %}
-        <tr  style="border: 1px solid">
-            <td  style="border: 1px solid">
-                {{ multa.prestamo }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ multa.tipo }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ multa.monto}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ multa.pagada }}
-            </td>
-            <td  style="border: 1px solid">
-                {{ multa.fecha}}
-            </td>
-            </tr>
-        {% endfor %}
-
-    </table>
-
+        <!-- Body -->
+        <div class="card-body p-4">
+            {% if multas %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="bi bi-hash me-1"></i>ID</th>
+                            <th><i class="bi bi-file-text me-1"></i>Préstamo</th>
+                            <th><i class="bi bi-tags me-1"></i>Tipo</th>
+                            <th class="text-end"><i class="bi bi-cash me-1"></i>Monto</th>
+                            <th><i class="bi bi-calendar me-1"></i>Fecha</th>
+                            <th class="text-center"><i class="bi bi-check-circle me-1"></i>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for multa in multas %}
+                        <tr>
+                            <td class="text-muted">#{{ multa.id }}</td>
+                            <td>
+                                <small class="text-muted d-block">Libro: {{ multa.prestamo.libro.titulo }}</small>
+                                <small class="text-muted">Usuario: {{ multa.prestamo.usuario.username }}</small>
+                            </td>
+                            <td>
+                                {% if multa.tipo == 'r' %}
+                                <span class="badge bg-warning"><i class="bi bi-clock me-1"></i>Retraso</span>
+                                {% elif multa.tipo == 'p' %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Pérdida</span>
+                                {% elif multa.tipo == 'd' %}
+                                <span class="badge bg-secondary"><i
+                                        class="bi bi-exclamation-triangle me-1"></i>Deterioro</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end fw-bold text-danger">${{ multa.monto }}</td>
+                            <td>{{ multa.fecha }}</td>
+                            <td class="text-center">
+                                {% if multa.pagada %}
+                                <span class="badge bg-success rounded-pill">
+                                    <i class="bi bi-check-circle me-1"></i>Pagada
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger rounded-pill">
+                                    <i class="bi bi-clock me-1"></i>Pendiente
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-check-circle display-1 text-success"></i>
+                <p class="text-muted mt-3 mb-1">¡Excelente! No hay multas registradas</p>
+                <p class="text-muted">Todos los préstamos están al día</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

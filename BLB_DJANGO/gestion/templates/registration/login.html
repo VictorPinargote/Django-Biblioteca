@@ -1,21 +1,46 @@
 {% extends "index.html" %}
 
-{% block content %}
+{% block contenido %}
+<div class="col-12">
+    <div class="card shadow border-0 rounded-4" style="max-width: 500px; margin: 0 auto;">
+        <div class="card-header text-white py-4 text-center" style="background: #1e3a8a; border-radius: 16px 16px 0 0;">
+            <h3 class="mb-0 fw-bold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+            </h3>
+        </div>
+        <div class="card-body p-5">
+            {% if form.errors %}
+            <div class="alert alert-danger rounded-3 mb-4">
+                <i class="bi bi-exclamation-circle me-2"></i>Usuario o contraseña incorrectos
+            </div>
+            {% endif %}
 
-<h2>Iniciar Sesión</h2>
+            <form method="POST">
+                {% csrf_token %}
 
-{% if form.errors %}
-    <p>Usuario o contraseña incorrectos</p>
-{% endif %}
+                <div class="mb-4">
+                    <label for="id_username" class="form-label fw-semibold">
+                        <i class="bi bi-person me-2 text-primary"></i>Usuario
+                    </label>
+                    <input type="text" name="username" id="id_username" class="form-control form-control-lg rounded-3"
+                        placeholder="Tu nombre de usuario" required>
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    <label for="id_username">Usuario: </label>
-    <input type="text" name="username" id="id_username" required><br>
+                <div class="mb-4">
+                    <label for="id_password" class="form-label fw-semibold">
+                        <i class="bi bi-lock me-2 text-primary"></i>Contraseña
+                    </label>
+                    <input type="password" name="password" id="id_password"
+                        class="form-control form-control-lg rounded-3" placeholder="Tu contraseña" required>
+                </div>
 
-    <label for="id_password">Contraseña: </label>
-    <input type="password" name="password" id="id_password" required><br>
-    
-    <button type="submit">Iniciar Sesión</button>
-</form>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

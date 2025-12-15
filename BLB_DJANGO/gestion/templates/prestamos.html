@@ -1,44 +1,88 @@
 {% extends "index.html" %}
 
-{% block contentido %}
-<h2> PRESTAMOS </h2>
-    <table style="border: 1px solid">
-        <tr style="border: 1px solid">
-            <td  style="border: 1px solid">Libro</td>
-            <td  style="border: 1px solid">Usuario</td>
-            <td  style="border: 1px solid">fecha_prestamos</td>
-            <td  style="border: 1px solid">fecha_max</td>
-            <td  style="border: 1px solid">fecha_devolucion</td>
-            <td  style="border: 1px solid">dias_retraso</td>
-            <td  style="border: 1px solid">multa_retraso</td>
+{% block contenido %}
+<div class="col-12">
+    <div class="card shadow-sm">
+        <!-- Header -->
+        <div class="card-header text-white py-3 d-flex justify-content-between align-items-center"
+            style="background: #ea580c; border-radius: 16px 16px 0 0;">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-calendar-check-fill me-2"></i>Gestión de Préstamos
+            </h4>
+            <a href="{% url 'crear_prestamo' %}" class="btn btn-light rounded-pill px-3 fw-semibold">
+                <i class="bi bi-plus-circle me-1"></i>Nuevo Préstamo
+            </a>
+        </div>
 
-        </tr>
-        {% for prestamo in prestamos %}
-        <tr  style="border: 1px solid">
-            <td  style="border: 1px solid">
-                {{ prestamo.libro }}
-            </td>
-    
-            <td  style="border: 1px solid">
-                {{ prestamo.usuario}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ prestamo.fecha_prestamos}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ prestamo.fecha_max}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ prestamo.fecha_devolucion}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ prestamo.dias_retraso}}
-            </td>
-            <td  style="border: 1px solid">
-                {{ prestamo.multa_retraso }}
-            </td>
-            </tr>
-        {% endfor %}
+        <!-- Body -->
+        <div class="card-body p-4">
+            {% if prestamos %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="bi bi-hash me-1"></i>ID</th>
+                            <th><i class="bi bi-book me-1"></i>Libro</th>
+                            <th><i class="bi bi-person me-1"></i>Usuario</th>
+                            <th><i class="bi bi-calendar me-1"></i>F. Préstamo</th>
+                            <th><i class="bi bi-calendar-x me-1"></i>F. Máxima</th>
+                            <th><i class="bi bi-calendar-check me-1"></i>F. Devolución</th>
+                            <th class="text-center"><i class="bi bi-clock me-1"></i>Retraso</th>
+                            <th class="text-end"><i class="bi bi-cash me-1"></i>Multa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prestamo in prestamos %}
+                        <tr class="prestamo-row" style="cursor: pointer;"
+                            data-url="{% url 'detalle_prestamo' prestamo.id %}">
+                            <td class="text-muted">#{{ prestamo.id }}</td>
+                            <td class="fw-semibold">{{ prestamo.libro.titulo }}</td>
+                            <td>{{ prestamo.usuario.username }}</td>
+                            <td>{{ prestamo.fecha_prestamos }}</td>
+                            <td>{{ prestamo.fecha_max }}</td>
+                            <td>
+                                {% if prestamo.fecha_devolucion %}
+                                {{ prestamo.fecha_devolucion }}
+                                {% else %}
+                                <span class="badge bg-warning">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if prestamo.dias_retraso %}
+                                <span class="badge bg-danger rounded-pill">
+                                    {{ prestamo.dias_retraso }} día(s)
+                                </span>
+                                {% else %}
+                                <span class="badge bg-success rounded-pill">Al día</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end fw-bold text-danger">${{ prestamo.multa_retraso }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-4">No hay préstamos registrados</p>
+                <a href="{% url 'crear_prestamo' %}" class="btn btn-warning rounded-pill px-4 text-white fw-semibold">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Primer Préstamo
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-    </table>
+<script>
+    // Click en fila para ir al detalle
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.prestamo-row').forEach(row => {
+            row.addEventListener('click', function () {
+                window.location.href = this.dataset.url;
+            });
+        });
+    });
+</script>
 {% endblock %}

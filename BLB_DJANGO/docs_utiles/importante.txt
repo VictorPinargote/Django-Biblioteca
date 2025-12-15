@@ -1,0 +1,5 @@
+DJANGO CONTRASEÑA Y USUARIO POR SI NO TE ACUERDAS
+------> ojo es solo para el admin osea esta paguina http://localhost:8000/admin/
+
+USUARIO = "joelp"
+CONTRASEÑA = "joelalvarez18"
