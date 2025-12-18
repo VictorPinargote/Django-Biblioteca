@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponseForbidden
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
-from .models import Autor, Libro, Prestamo, Multa
+from .models import Autor, Libro, Prestamo, Multa, Perfil
+from .forms import RegistroUsuarioForm
 
 def index(request):
     titulo2 = "Hola Mundillo y sapos"
@@ -19,6 +19,8 @@ def lista_libros(request):
     return render(request, 'gestion/templates/libros.html', {'libros': libros})
 
 def crear_libro(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
     autores = Autor.objects.all()
     if request.method == "POST": #si ya envia datos y captura en variabes para poder crear el libro
         titulo =  request.POST.get('titulo')
@@ -40,6 +42,8 @@ def lista_autores(request):
         
 @login_required
 def crear_autor(request, id=None):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
     if id == None:
         autor = None
         modo = 'crear'
@@ -70,7 +74,7 @@ def lista_multas(request):
 
 @login_required #asegura que el usuario este logueado
 def crear_prestamo(request):
-    if not request.user.has_perm('gestion.gestionar_prestamos'):
+    if not request.user.is_staff:
         return HttpResponseForbidden()
     libro = Libro.objects.filter(disponible=True)
     usuario = User.objects.all()
@@ -95,6 +99,8 @@ def crear_prestamo(request):
                                                                      'fecha': fecha})
 
 def editar_autor(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
     autor = get_object_or_404(Autor, id=id)
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -112,13 +118,22 @@ def editar_autor(request, id):
 
 def registro(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
-            usuario = form.save()
+            usuario = form.save() #guarda el usuario en la base de datos
+            cedula = form.cleaned_data.get('cedula') #obtiene el valor llamado
+            telefono = form.cleaned_data.get('telefono')
+            staff = form.cleaned_data.get('staff')
+            clave = form.cleaned_data.get('clave_admin')
+            perfil = Perfil.objects.create(usuario=usuario, cedula=cedula, telefono=telefono) #en la tabla perfil se crea columnas para el usuario, cedula y telefono
+            clave_staff = "123456"
+            if staff and clave == clave_staff:
+                usuario.is_staff = True
+                usuario.save() #guarda ese cambio en la base de datos
             login(request, usuario)
             return redirect('index')
     else:
-        form = UserCreationForm()
+        form = RegistroUsuarioForm() 
     return render(request, 'gestion/templates/registration/registro.html', {'form': form})
 
 def detalle_prestamo(request, id):
@@ -131,6 +146,8 @@ def detalle_prestamo(request, id):
 
 @login_required
 def crear_multa(request, prestamo_id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
     prestamo = get_object_or_404(Prestamo, id=prestamo_id)
     if request.method == 'POST':
         tipo = request.POST.get('tipo')

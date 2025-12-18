@@ -2,19 +2,69 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow border-0 rounded-4" style="max-width: 500px; margin: 0 auto;">
-        <div class="card-header text-white py-4 text-center" style="background: #059669; border-radius: 16px 16px 0 0;">
+    <div class="card shadow border-0 rounded-4" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-header text-white py-4 text-center" style="background: #059669;">
             <h3 class="mb-0 fw-bold">
                 <i class="bi bi-person-plus me-2"></i>Registro de Usuario
             </h3>
         </div>
-        <div class="card-body p-5">
-            {{ form.non_field_errors }}
-
+        <div class="card-body p-4">
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
 
+                <!-- Datos de cuenta -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Usuario</label>
+                    {{ form.username }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    {{ form.email }}
+                </div>
+
+                <!-- Datos personales -->
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-semibold">Nombre</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-semibold">Apellido</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-semibold">Cédula</label>
+                        {{ form.cedula }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-semibold">Teléfono</label>
+                        {{ form.telefono }}
+                    </div>
+                </div>
+
+                <!-- Contraseñas -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Contraseña</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Confirmar Contraseña</label>
+                    {{ form.password2 }}
+                </div>
+
+                <!-- Staff -->
+                <div class="mb-3 form-check">
+                    {{ form.staff }}
+                    <label class="form-check-label">¿Registrar como Staff/Admin?</label>
+                </div>
+                <div class="mb-3" id="div-clave-admin">
+                    <label class="form-label fw-semibold">Clave de Admin</label>
+                    {{ form.clave_admin }}
+                </div>
+
+                <!-- Botón -->
                 <div class="d-grid gap-2 mt-4">
                     <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold">
                         <i class="bi bi-check-circle me-2"></i>Crear Cuenta
@@ -24,4 +74,21 @@
         </div>
     </div>
 </div>
+<script>
+    // Obtener elementos
+    const checkboxStaff = document.querySelector('input[name="staff"]');
+    const divClaveAdmin = document.getElementById('div-clave-admin');
+
+    // Ocultar al inicio
+    divClaveAdmin.style.display = 'none';
+
+    // Mostrar/ocultar cuando cambia el checkbox
+    checkboxStaff.addEventListener('change', function () {
+        if (this.checked) {
+            divClaveAdmin.style.display = 'block';
+        } else {
+            divClaveAdmin.style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}

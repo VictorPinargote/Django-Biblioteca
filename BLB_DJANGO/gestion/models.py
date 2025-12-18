@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -90,3 +91,12 @@ class Multa(models.Model):
 
         
         #cuano yo voy al registro el monento de crear el ususario debee poder asiganarle el poder gestionar prestamos automaticamnte 
+
+class Perfil(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    cedula = models.CharField(max_length=13)
+    telefono = models.CharField(max_length=10)
+    
+    
+    
+# usar imagenes estaticas de libros 

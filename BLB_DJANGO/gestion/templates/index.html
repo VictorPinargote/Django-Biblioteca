@@ -153,7 +153,13 @@
                     <li class="nav-item ms-2">
                         <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
                     </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="{% url 'registro' %}">Registro</a>
+                    </li>
                     {% else %}
+                    <li class="nav-item ms-2">
+                        <span class="nav-link text-light">Hola, {{ user.first_name|default:user.username }}</span>
+                    </li>
                     <li class="nav-item ms-2">
                         <form method="post" action="{% url 'logout' %}" class="d-inline">
                             {% csrf_token %}

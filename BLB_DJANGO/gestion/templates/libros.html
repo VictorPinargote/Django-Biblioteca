@@ -9,9 +9,11 @@
             <h4 class="mb-0 fw-bold">
                 <i class="bi bi-book-fill me-2"></i>Catálogo de Libros
             </h4>
+            {% if user.is_staff %}
             <a href="{% url 'crear_libro' %}" class="btn btn-light rounded-pill px-3 fw-semibold">
                 <i class="bi bi-plus-circle me-1"></i>Nuevo Libro
             </a>
+            {% endif %}
         </div>
 
         <!-- Body -->
