@@ -61,7 +61,8 @@ class Prestamo(models.Model):
         fecha_ref = self.fecha_devolucion or hoy #si la fecha de devolucion es nula se toma la fecha actual
         if fecha_ref >= self.fecha_max: #si la fecha de referencia es mayor a la fecha maxima
             return (fecha_ref - self.fecha_max).days #retorna la diferencia en dias entre la fecha de referencia y la fecha maxima
-        return 0 #si no hay retraso retorna 0 dias de retraso
+        else:
+            return 0 #si no hay retraso retorna 0 dias de retraso
 
     #calcular multa por retraso
     @property
