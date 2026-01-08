@@ -162,6 +162,7 @@
                             <i class="bi bi-journal-bookmark me-1"></i>Solicitudes
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            {% if rol_usuario == 'usuario' %}
                             <li>
                                 <a class="dropdown-item" href="{% url 'crear_solicitud' %}">
                                     <i class="bi bi-plus-circle me-2"></i>Solicitar Préstamo
@@ -172,6 +173,7 @@
                                     <i class="bi bi-list-check me-2"></i>Mis Solicitudes
                                 </a>
                             </li>
+                            {% endif %}
                             {% if puede_gestionar_solicitudes %}
                             <li>
                                 <hr class="dropdown-divider">

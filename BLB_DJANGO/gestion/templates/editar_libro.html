@@ -2,117 +2,79 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow-sm" style="max-width: 750px; margin: 0 auto; border-radius: 24px; overflow: hidden;">
-        <!-- Header -->
+    <div class="card shadow-sm" style="max-width: 750px; margin: 0 auto; border-radius: 24px;">
         <div class="card-header text-white py-4 text-center"
             style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-            <h4 class="mb-0 fw-bold">
-                <i class="bi bi-pencil me-2"></i>Editar Libro
-            </h4>
-            <p class="mb-0 mt-1 opacity-75">Modifica la información del libro</p>
+            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil me-2"></i>Editar Libro</h4>
         </div>
-
         <div class="card-body p-4">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <!-- Imagen actual -->
                 {% if libro.imagen %}
                 <div class="text-center mb-4">
-                    <img src="{{ libro.imagen.url }}" alt="{{ libro.titulo }}" class="rounded shadow"
-                        style="max-height: 150px;">
-                    <p class="text-muted small mt-2">Imagen actual</p>
+                    <img src="{{ libro.imagen.url }}" class="rounded shadow" style="max-height: 150px;">
                 </div>
                 {% endif %}
 
-                <!-- Título -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        <i class="bi bi-fonts me-2 text-primary"></i>Título
-                    </label>
-                    <input type="text" name="titulo" class="form-control form-control-lg rounded-3"
-                        value="{{ libro.titulo }}" required {% if libro.es_de_openlibrary %}readonly
-                        style="background: #f0fdf4;" {% endif %}>
+                    <label class="form-label fw-semibold">Titulo</label>
+                    <input type="text" name="titulo" class="form-control form-control-lg" value="{{ libro.titulo }}"
+                        required>
                 </div>
 
-                <!-- Autor -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        <i class="bi bi-person me-2 text-primary"></i>Autor
-                    </label>
-                    {% if libro.es_de_openlibrary %}
-                    <input type="text" class="form-control form-control-lg rounded-3" readonly
-                        value="{{ libro.autor.nombre }} {{ libro.autor.apellido }}" style="background: #f0fdf4;">
-                    <input type="hidden" name="autor" value="{{ libro.autor.id }}">
-                    {% else %}
-                    <select name="autor" class="form-select form-select-lg rounded-3" required>
-                        {% for autor in autores %}
-                        <option value="{{ autor.id }}" {% if autor.id==libro.autor.id %}selected{% endif %}>
-                            {{ autor.nombre }} {{ autor.apellido }}
-                        </option>
+                    <label class="form-label fw-semibold">Autor</label>
+                    <select name="autor" class="form-select form-select-lg" required id="autor_select">
+                        {% for a in autores %}
+                        <option value="{{ a.id }}">{{ a.nombre }} {{ a.apellido }}</option>
                         {% endfor %}
                     </select>
-                    {% endif %}
                 </div>
 
-                <!-- Año -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        <i class="bi bi-calendar me-2 text-info"></i>Año de Publicación
-                    </label>
-                    <input type="number" name="anio_publicacion" class="form-control form-control-lg rounded-3"
-                        value="{{ libro.anio_publicacion|default:'' }}" {% if libro.es_de_openlibrary and
-                        libro.anio_publicacion %}readonly style="background: #f0fdf4;" {% endif %}>
+                    <label class="form-label fw-semibold">Anio</label>
+                    <input type="number" name="anio_publicacion" class="form-control form-control-lg"
+                        value="{{ libro.anio_publicacion|default:'' }}">
                 </div>
 
-                <!-- Descripción -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        <i class="bi bi-journal-text me-2 text-purple"></i>Descripción
-                    </label>
-                    <textarea name="descripcion" class="form-control rounded-3"
+                    <label class="form-label fw-semibold">Descripcion</label>
+                    <textarea name="descripcion" class="form-control"
                         rows="4">{{ libro.descripcion|default:'' }}</textarea>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-box-seam me-2 text-success"></i>Stock
-                        </label>
-                        <input type="number" name="stock" class="form-control form-control-lg rounded-3"
-                            value="{{ libro.stock }}" min="0" max="500" required>
+                    <div class="col-6 mb-4">
+                        <label class="form-label fw-semibold">Stock</label>
+                        <input type="number" name="stock" class="form-control form-control-lg" value="{{ libro.stock }}"
+                            min="0" max="500" required>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-check-circle me-2 text-info"></i>Disponible
-                        </label>
+                    <div class="col-6 mb-4">
+                        <label class="form-label fw-semibold">Disponible</label>
                         <div class="form-check form-switch mt-2">
-                            <input class="form-check-input" type="checkbox" name="disponible" id="disponible" {% if
-                                libro.disponible %}checked{% endif %} style="width: 3em; height: 1.5em;">
-                            <label class="form-check-label" for="disponible">Sí</label>
+                            <input class="form-check-input" type="checkbox" name="disponible" {% if libro.disponible %}
+                                checked {% endif %}>
                         </div>
                     </div>
                 </div>
 
-                <!-- Imagen -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        <i class="bi bi-image me-2 text-warning"></i>Cambiar Imagen
-                    </label>
-                    <input type="file" name="imagen" class="form-control rounded-3" accept="image/*">
+                    <label class="form-label fw-semibold">Cambiar Imagen</label>
+                    <input type="file" name="imagen" class="form-control" accept="image/*">
                 </div>
 
-                <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-lg rounded-pill fw-bold py-3"
-                        style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;">
-                        <i class="bi bi-save me-2"></i>Guardar Cambios
-                    </button>
-                    <a href="{% url 'detalle_libro' libro.id %}" class="btn btn-outline-secondary btn-lg rounded-pill">
-                        <i class="bi bi-arrow-left me-2"></i>Cancelar
-                    </a>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-warning btn-lg text-white fw-bold">Guardar Cambios</button>
+                    <a href="{% url 'detalle_libro' libro.id %}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    // Seleccionar el autor correcto
+    document.getElementById('autor_select').value = '{{ libro.autor.id }}';
+</script>
 {% endblock %}

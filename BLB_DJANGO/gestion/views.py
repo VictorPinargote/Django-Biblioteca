@@ -96,7 +96,7 @@ def detalle_libro(request, id):
         'puede_editar': puede_editar
     })
 
-@requiere_rol('bodeguero', 'admin')
+@requiere_rol('bodeguero')
 def editar_libro(request, id):
     """Vista para editar un libro - solo bodeguero y admin"""
     libro = get_object_or_404(Libro, id=id)
@@ -127,7 +127,7 @@ def editar_libro(request, id):
         'autores': autores
     })
 
-@requiere_rol('bodeguero', 'admin')
+@requiere_rol('bodeguero')
 def eliminar_libro(request, id):
     """Vista para eliminar un libro - solo bodeguero y admin"""
     libro = get_object_or_404(Libro, id=id)
@@ -146,7 +146,7 @@ def eliminar_libro(request, id):
     
     return redirect('detalle_libro', id=libro.id)
 
-@requiere_rol('bodeguero', 'admin')
+@requiere_rol('bodeguero')
 def crear_libro(request):
     autores = Autor.objects.all()
     if request.method == "POST":
@@ -225,7 +225,7 @@ def lista_autores(request):
     autores = Autor.objects.all()
     return render(request, 'gestion/templates/autores.html', {'autores': autores})
         
-@requiere_rol('bodeguero', 'admin')
+@requiere_rol('bodeguero')
 def crear_autor(request, id=None):
     if id == None:
         autor = None
@@ -284,7 +284,7 @@ def crear_prestamo(request):
                                                                      'usuarios': usuario,
                                                                      'fecha': fecha})
 
-@requiere_rol('bodeguero', 'admin')
+@requiere_rol('bodeguero')
 def editar_autor(request, id):
     autor = get_object_or_404(Autor, id=id)
     if request.method == 'POST':
@@ -300,6 +300,24 @@ def editar_autor(request, id):
             return redirect('lista_autores')
     
     return render(request, 'gestion/templates/editar_autor.html', {'autor': autor})
+
+@requiere_rol('bodeguero')
+def eliminar_autor(request, id):
+    autor = get_object_or_404(Autor, id=id)
+    
+    if request.method == 'POST':
+        try:
+            autor.delete()
+            registrar_log(request.user, 'eliminar', f'Eliminó autor: {autor.nombre} {autor.apellido}', request, 'Autor', id)
+            return redirect('lista_autores')
+        except:
+            # Si tiene libros asociados, no se puede eliminar (por on_delete=PROTECT)
+            return render(request, 'gestion/templates/autores.html', {
+                'autores': Autor.objects.all(),
+                'error': f'No se puede eliminar a {autor.nombre} {autor.apellido} porque tiene libros registrados.'
+            })
+    
+    return redirect('lista_autores')
 
 # Códigos de verificación para roles especiales
 CODIGOS_ROL = {
@@ -465,9 +483,32 @@ def api_buscar_autores(request):
         resultados = buscar_autores(query)
         autores = []
         for autor in resultados:
+            # Obtener biografía
+            biografia = ''
+            autor_key = autor.get('key', '') # e.g. OL123A
+            if autor_key:
+                try:
+                    import requests as req
+                    # OpenLibrary devuelve keys como "OL123A", la URL requiere "/authors/OL123A.json"
+                    # A veces la key ya viene completa en search? No, suele ser el ID. 
+                    # El search docs devuelve "key": "OL..."
+                    
+                    url_autor = f'https://openlibrary.org/authors/{autor_key}.json'
+                    resp = req.get(url_autor, timeout=3)
+                    if resp.status_code == 200:
+                        data_autor = resp.json()
+                        bio = data_autor.get('bio', '')
+                        if isinstance(bio, dict):
+                            biografia = bio.get('value', '')
+                        elif isinstance(bio, str):
+                            biografia = bio
+                except:
+                    pass
+
             autores.append({
                 'nombre': autor.get('name', 'Sin nombre'),
                 'obras': autor.get('work_count', 0),
+                'biografia': biografia[:500] if biografia else '' 
             })
         return JsonResponse({'autores': autores})
     return JsonResponse({'autores': []})

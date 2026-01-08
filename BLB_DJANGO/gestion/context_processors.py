@@ -25,24 +25,27 @@ def permisos_usuario(request):
             permisos['rol_usuario'] = rol
             permisos['rol_display'] = perfil.get_rol_display()
             
-            # Usuario normal: puede ver sus préstamos, sus multas y solicitar
+            # === USUARIO ===
             if rol == 'usuario':
                 permisos['puede_ver_prestamos'] = True
                 permisos['puede_ver_multas'] = True
                 permisos['puede_ver_solicitudes'] = True
             
-            # Bodeguero: solo libros y autores
+            # === BODEGUERO ===
             elif rol == 'bodeguero':
                 permisos['puede_ver_autores'] = True
+                permisos['puede_gestionar_libros'] = True
+                permisos['puede_gestionar_autores'] = True
             
-            # Bibliotecario: préstamos, multas, solicitudes
+            # === BIBLIOTECARIO ===
             elif rol == 'bibliotecario':
+                permisos['puede_ver_autores'] = True
                 permisos['puede_ver_prestamos'] = True
                 permisos['puede_ver_multas'] = True
                 permisos['puede_ver_solicitudes'] = True
                 permisos['puede_gestionar_solicitudes'] = True
             
-            # Admin: todo excepto crear libros
+            # === ADMIN ===
             elif rol == 'admin':
                 permisos['puede_ver_autores'] = True
                 permisos['puede_ver_prestamos'] = True
@@ -52,9 +55,11 @@ def permisos_usuario(request):
                 permisos['puede_ver_usuarios'] = True
                 permisos['puede_ver_logs'] = True
             
-            # Superusuario: acceso total
+            # === SUPERUSUARIO ===
             elif rol == 'superusuario':
                 permisos['puede_ver_autores'] = True
+                permisos['puede_gestionar_libros'] = True
+                permisos['puede_gestionar_autores'] = True
                 permisos['puede_ver_prestamos'] = True
                 permisos['puede_ver_multas'] = True
                 permisos['puede_ver_solicitudes'] = True
@@ -63,8 +68,11 @@ def permisos_usuario(request):
                 permisos['puede_ver_logs'] = True
                 
         except:
-            # Si no tiene perfil, tratar como usuario normal
-            permisos['puede_ver_prestamos'] = True
-            permisos['puede_ver_solicitudes'] = True
+            # Si no tiene perfil o error, solo permisos básicos o ninguno
+            if request.user.is_staff:
+                 permisos['puede_ver_usuarios'] = True # Fallback para admin sin perfil
+            else:
+                 permisos['puede_ver_prestamos'] = True
+                 permisos['puede_ver_solicitudes'] = True
     
     return permisos
