@@ -2,24 +2,24 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow border-0 rounded-4">
-        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
+    <div class="card shadow-lg users-card">
+        <div class="card-header users-header py-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h3 class="mb-0 fw-bold">
-                        <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
+                    <h3 class="mb-0 fw-bold text-white">
+                        <i class="bi bi-people-fill me-2" style="color: #f59e0b;"></i>Gestión de Usuarios
                     </h3>
-                    <p class="mb-0 mt-1 opacity-75">Administra los usuarios del sistema</p>
+                    <p class="mb-0 mt-1 opacity-75 text-white">Administra los usuarios del sistema</p>
                 </div>
-                <a href="{% url 'crear_usuario' %}" class="btn btn-light rounded-pill">
+                <a href="{% url 'crear_usuario' %}" class="btn-user-action">
                     <i class="bi bi-person-plus me-1"></i>Nuevo Usuario
                 </a>
             </div>
         </div>
         <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle users-table">
+                    <thead>
                         <tr>
                             <th>Usuario</th>
                             <th>Nombre</th>
@@ -34,47 +34,52 @@
                         {% for usuario in usuarios %}
                         <tr>
                             <td>
-                                <strong>@{{ usuario.username }}</strong>
+                                <strong style="color: #f59e0b;">@{{ usuario.username }}</strong>
                             </td>
-                            <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
-                            <td>{{ usuario.email|default:"-" }}</td>
-                            <td>{{ usuario.perfil.cedula|default:"-" }}</td>
+                            <td style="color: #f1f5f9;">{{ usuario.first_name }} {{ usuario.last_name }}</td>
+                            <td style="color: #94a3b8;">{{ usuario.email|default:"-" }}</td>
+                            <td style="color: #94a3b8;">{{ usuario.perfil.cedula|default:"-" }}</td>
                             <td>
                                 {% if usuario.perfil %}
                                 {% if usuario.perfil.rol == 'usuario' %}
-                                <span class="badge bg-secondary">{{ usuario.perfil.get_rol_display }}</span>
+                                <span class="badge role-badge role-user">{{ usuario.perfil.get_rol_display }}</span>
                                 {% elif usuario.perfil.rol == 'bodeguero' %}
-                                <span class="badge bg-warning text-dark">{{ usuario.perfil.get_rol_display }}</span>
+                                <span class="badge role-badge role-warehouse">{{ usuario.perfil.get_rol_display
+                                    }}</span>
                                 {% elif usuario.perfil.rol == 'bibliotecario' %}
-                                <span class="badge bg-info">{{ usuario.perfil.get_rol_display }}</span>
+                                <span class="badge role-badge role-librarian">{{ usuario.perfil.get_rol_display
+                                    }}</span>
                                 {% elif usuario.perfil.rol == 'admin' %}
-                                <span class="badge bg-primary">{{ usuario.perfil.get_rol_display }}</span>
+                                <span class="badge role-badge role-admin">{{ usuario.perfil.get_rol_display }}</span>
                                 {% else %}
-                                <span class="badge bg-danger">{{ usuario.perfil.get_rol_display }}</span>
+                                <span class="badge role-badge role-super">{{ usuario.perfil.get_rol_display }}</span>
                                 {% endif %}
                                 {% else %}
-                                <span class="badge bg-secondary">Sin perfil</span>
+                                <span class="badge role-badge role-none">Sin perfil</span>
                                 {% endif %}
                             </td>
-                            <td>{{ usuario.date_joined|date:"d/m/Y" }}</td>
+                            <td style="color: #94a3b8;">{{ usuario.date_joined|date:"d/m/Y" }}</td>
                             <td>
-                                <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                {% if usuario != request.user %}
-                                <form method="POST" action="{% url 'eliminar_usuario' usuario.id %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('¿Eliminar a {{ usuario.username }}?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                                {% endif %}
+                                <div class="action-buttons">
+                                    <a href="{% url 'editar_usuario' usuario.id %}" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    {% if usuario != request.user %}
+                                    <form method="POST" action="{% url 'eliminar_usuario' usuario.id %}"
+                                        class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-action btn-delete"
+                                            onclick="return confirm('¿Eliminar a {{ usuario.username }}?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-4">No hay usuarios</td>
+                            <td colspan="7" class="text-center py-4" style="color: #64748b;">No hay usuarios</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -83,4 +88,132 @@
         </div>
     </div>
 </div>
+
+<style>
+    .users-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .users-header {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+
+    .btn-user-action {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-user-action:hover {
+        transform: translateY(-2px);
+        color: #000;
+    }
+
+    .users-table {
+        color: #e2e8f0;
+    }
+
+    .users-table thead {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .users-table thead th {
+        color: #94a3b8;
+        font-weight: 600;
+        border: none;
+    }
+
+    .users-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .users-table tbody tr:hover {
+        background: rgba(245, 158, 11, 0.08);
+    }
+
+    .role-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .role-user {
+        background: rgba(100, 116, 139, 0.3);
+        color: #94a3b8;
+    }
+
+    .role-warehouse {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+    }
+
+    .role-librarian {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: #fff;
+    }
+
+    .role-admin {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+    }
+
+    .role-super {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+    }
+
+    .role-none {
+        background: rgba(100, 116, 139, 0.2);
+        color: #64748b;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-action {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+    }
+
+    .btn-edit:hover {
+        background: #3b82f6;
+        color: #fff;
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+
+    .btn-delete:hover {
+        background: #ef4444;
+        color: #fff;
+    }
+</style>
 {% endblock %}

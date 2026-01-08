@@ -2,19 +2,18 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow border-0" style="border-radius: 24px; overflow: hidden;">
-        <!-- Header con gradiente naranja vibrante -->
-        <div class="card-header text-white py-4"
-            style="background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%);">
+    <div class="card shadow-lg loans-card">
+        <!-- Header -->
+        <div class="card-header loans-header py-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h3 class="mb-0 fw-bold">
-                        <i class="bi bi-calendar-check-fill me-2"></i>Gestión de Préstamos
+                    <h3 class="mb-0 fw-bold text-white">
+                        <i class="bi bi-calendar-check-fill me-2" style="color: #f59e0b;"></i>Gestión de Préstamos
                     </h3>
-                    <p class="mb-0 mt-1 opacity-75">Control de salidas y devoluciones</p>
+                    <p class="mb-0 mt-1 opacity-75 text-white">Control de salidas y devoluciones</p>
                 </div>
                 {% if puede_gestionar_solicitudes %}
-                <a href="{% url 'crear_prestamo' %}" class="btn btn-light btn-lg rounded-pill px-4 fw-bold shadow">
+                <a href="{% url 'crear_prestamo' %}" class="btn-loan-action">
                     <i class="bi bi-plus-circle me-2"></i>Nuevo Préstamo
                 </a>
                 {% endif %}
@@ -22,11 +21,11 @@
         </div>
 
         <!-- Body -->
-        <div class="card-body p-4" style="background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);">
+        <div class="card-body p-4">
             {% if prestamos %}
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead style="background: linear-gradient(135deg, #fed7aa 0%, #fef3c7 100%);">
+                <table class="table table-hover align-middle mb-0 loans-table">
+                    <thead>
                         <tr>
                             <th class="py-3"><i class="bi bi-book me-1"></i>Libro</th>
                             <th><i class="bi bi-person me-1"></i>Usuario</th>
@@ -38,21 +37,19 @@
                     </thead>
                     <tbody>
                         {% for prestamo in prestamos %}
-                        <tr class="prestamo-row" style="cursor: pointer;"
-                            data-url="{% url 'detalle_prestamo' prestamo.id %}">
+                        <tr class="prestamo-row" data-url="{% url 'detalle_prestamo' prestamo.id %}">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="me-3"
-                                        style="width: 45px; height: 60px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <div class="book-thumbnail me-3">
                                         {% if prestamo.libro.imagen %}
                                         <img src="{{ prestamo.libro.imagen.url }}" class="w-100 h-100 rounded"
                                             style="object-fit: cover;">
                                         {% else %}
-                                        <i class="bi bi-book text-primary"></i>
+                                        <i class="bi bi-book" style="color: #f59e0b;"></i>
                                         {% endif %}
                                     </div>
                                     <div>
-                                        <span class="fw-bold" style="color: #1e3a8a;">
+                                        <span class="fw-bold book-title-cell">
                                             {{ prestamo.libro.titulo|truncatechars:25 }}
                                         </span>
                                         <br><small class="text-muted">{{ prestamo.libro.autor }}</small>
@@ -61,36 +58,31 @@
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="rounded-circle me-2 d-flex align-items-center justify-content-center"
-                                        style="width: 35px; height: 35px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
-                                        <i class="bi bi-person text-primary"></i>
+                                    <div class="user-avatar me-2">
+                                        <i class="bi bi-person"></i>
                                     </div>
-                                    {{ prestamo.usuario.username }}
+                                    <span class="user-name">{{ prestamo.usuario.username }}</span>
                                 </div>
                             </td>
-                            <td>{{ prestamo.fecha_prestamos }}</td>
-                            <td>{{ prestamo.fecha_max }}</td>
+                            <td class="date-cell">{{ prestamo.fecha_prestamos }}</td>
+                            <td class="date-cell">{{ prestamo.fecha_max }}</td>
                             <td class="text-center">
                                 {% if prestamo.fecha_devolucion %}
-                                <span class="badge rounded-pill px-3 py-2"
-                                    style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                                <span class="badge status-badge status-returned">
                                     <i class="bi bi-check-circle me-1"></i>Devuelto
                                 </span>
                                 {% elif prestamo.dias_retraso and prestamo.dias_retraso > 0 %}
-                                <span class="badge rounded-pill px-3 py-2"
-                                    style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                                <span class="badge status-badge status-late">
                                     <i class="bi bi-exclamation-circle me-1"></i>{{ prestamo.dias_retraso }} días
                                 </span>
                                 {% else %}
-                                <span class="badge rounded-pill px-3 py-2"
-                                    style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                <span class="badge status-badge status-active">
                                     <i class="bi bi-clock me-1"></i>Activo
                                 </span>
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <a href="{% url 'detalle_prestamo' prestamo.id %}" class="btn btn-sm rounded-pill"
-                                    style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white;">
+                                <a href="{% url 'detalle_prestamo' prestamo.id %}" class="btn-view">
                                     <i class="bi bi-eye me-1"></i>Ver
                                 </a>
                             </td>
@@ -100,15 +92,14 @@
                 </table>
             </div>
             {% else %}
-            <div class="text-center py-5">
+            <div class="text-center py-5 empty-state">
                 <div class="mb-4">
-                    <i class="bi bi-calendar-x display-1" style="color: #fed7aa;"></i>
+                    <i class="bi bi-calendar-x display-1" style="color: #f59e0b; opacity: 0.3;"></i>
                 </div>
-                <h4 class="fw-bold text-muted mb-3">No hay préstamos registrados</h4>
-                <p class="text-muted mb-4">¡Los préstamos aparecerán aquí cuando se creen!</p>
+                <h4 class="fw-bold mb-3" style="color: #f1f5f9;">No hay préstamos registrados</h4>
+                <p class="mb-4" style="color: #94a3b8;">¡Los préstamos aparecerán aquí cuando se creen!</p>
                 {% if puede_gestionar_solicitudes %}
-                <a href="{% url 'crear_prestamo' %}" class="btn btn-lg rounded-pill px-5"
-                    style="background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); color: white;">
+                <a href="{% url 'crear_prestamo' %}" class="btn-loan-action">
                     <i class="bi bi-plus-circle me-2"></i>Crear Préstamo
                 </a>
                 {% endif %}
@@ -119,8 +110,141 @@
 </div>
 
 <style>
-    .prestamo-row:hover {
-        background: linear-gradient(90deg, #fff7ed 0%, #fef3c7 100%) !important;
+    /* ========== LOANS PAGE DARK THEME ========== */
+    .loans-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        overflow: hidden;
+    }
+
+    .loans-header {
+        background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-loan-action {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        color: #ea580c;
+        padding: 0.7rem 1.3rem;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .btn-loan-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        color: #ea580c;
+    }
+
+    /* Table Styles */
+    .loans-table {
+        color: #e2e8f0;
+    }
+
+    .loans-table thead {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .loans-table thead th {
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        border: none;
+    }
+
+    .loans-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .loans-table tbody tr:hover {
+        background: rgba(245, 158, 11, 0.08);
+    }
+
+    .book-thumbnail {
+        width: 45px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(234, 88, 12, 0.2) 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .book-title-cell {
+        color: #f1f5f9;
+    }
+
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .user-name {
+        color: #e2e8f0;
+    }
+
+    .date-cell {
+        color: #94a3b8;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .status-returned {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+    }
+
+    .status-late {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+    }
+
+    .btn-view {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        color: #fff;
     }
 </style>
 

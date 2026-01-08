@@ -5,20 +5,19 @@
 <!-- Sección de bienvenida para visitantes -->
 {% if not user.is_authenticated %}
 <div class="col-12 mb-5">
-    <div class="card border-0 text-white overflow-hidden"
-        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f953c6 100%); border-radius: 24px;">
+    <div class="card border-0 text-white overflow-hidden welcome-card">
         <div class="card-body p-5 text-center">
             <h1 class="display-4 fw-bold mb-3">
-                <i class="bi bi-stars me-3"></i>¡Bienvenido a BiblioTech!
+                <i class="bi bi-book-half me-3" style="color: #f59e0b;"></i>¡Bienvenido a BiblioTech!
             </h1>
             <p class="lead mb-4 opacity-90">
                 Tu biblioteca digital favorita. Explora miles de libros, solicita préstamos y mucho más.
             </p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="{% url 'registro' %}" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">
+                <a href="{% url 'registro' %}" class="btn-welcome-primary">
                     <i class="bi bi-rocket-takeoff me-2"></i>Crear Cuenta Gratis
                 </a>
-                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg rounded-pill px-5">
+                <a href="{% url 'login' %}" class="btn-welcome-secondary">
                     <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
                 </a>
             </div>
@@ -30,8 +29,7 @@
 <div class="col-12 mb-4">
     <div class="row g-4 text-center">
         <div class="col-md-4">
-            <div class="card border-0 py-4"
-                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px;">
+            <div class="card border-0 py-4 stat-card stat-books">
                 <div class="card-body text-white">
                     <i class="bi bi-book display-4 mb-2"></i>
                     <h2 class="fw-bold display-5">{{ total_libros|default:"0" }}</h2>
@@ -40,8 +38,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 py-4"
-                style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 20px;">
+            <div class="card border-0 py-4 stat-card stat-authors">
                 <div class="card-body text-white">
                     <i class="bi bi-people display-4 mb-2"></i>
                     <h2 class="fw-bold display-5">{{ total_autores|default:"0" }}</h2>
@@ -50,8 +47,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 py-4"
-                style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 20px;">
+            <div class="card border-0 py-4 stat-card stat-satisfaction">
                 <div class="card-body text-white">
                     <i class="bi bi-award display-4 mb-2"></i>
                     <h2 class="fw-bold display-5">100%</h2>
@@ -64,13 +60,13 @@
 
 <!-- Catálogo de Libros para visitantes -->
 <div class="col-12 mb-4">
-    <div class="card border-0 shadow" style="border-radius: 20px;">
+    <div class="card border-0 shadow-lg catalog-card">
         <div class="card-header bg-transparent border-0 pt-4 px-4">
             <div class="d-flex justify-content-between align-items-center">
-                <h4 class="fw-bold mb-0">
-                    <i class="bi bi-collection me-2 text-primary"></i>Explora Nuestro Catálogo
+                <h4 class="fw-bold mb-0" style="color: #f1f5f9;">
+                    <i class="bi bi-collection me-2" style="color: #f59e0b;"></i>Explora Nuestro Catálogo
                 </h4>
-                <a href="{% url 'lista_libros' %}" class="btn btn-primary rounded-pill px-4">
+                <a href="{% url 'lista_libros' %}" class="btn-catalog">
                     Ver Todos <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -79,33 +75,32 @@
             <div class="row g-4">
                 {% for libro in libros_destacados %}
                 <div class="col-md-4 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
-                        <div class="position-relative"
-                            style="height: 180px; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+                    <div class="card h-100 book-preview-card">
+                        <div class="position-relative book-preview-img">
                             {% if libro.imagen %}
                             <img src="{{ libro.imagen.url }}" class="w-100 h-100" style="object-fit: cover;"
                                 alt="{{ libro.titulo }}">
                             {% else %}
                             <div class="d-flex align-items-center justify-content-center h-100">
-                                <i class="bi bi-book display-1 text-primary opacity-25"></i>
+                                <i class="bi bi-book display-1" style="color: #f59e0b; opacity: 0.3;"></i>
                             </div>
                             {% endif %}
                             {% if libro.stock > 0 %}
-                            <span class="position-absolute top-0 end-0 m-2 badge bg-success">Disponible</span>
+                            <span class="position-absolute top-0 end-0 m-2 badge badge-available">Disponible</span>
                             {% else %}
-                            <span class="position-absolute top-0 end-0 m-2 badge bg-danger">Agotado</span>
+                            <span class="position-absolute top-0 end-0 m-2 badge badge-unavailable">Agotado</span>
                             {% endif %}
                         </div>
                         <div class="card-body">
-                            <h6 class="fw-bold mb-1">{{ libro.titulo|truncatechars:25 }}</h6>
-                            <small class="text-muted">{{ libro.autor.nombre }} {{ libro.autor.apellido }}</small>
+                            <h6 class="fw-bold mb-1" style="color: #f1f5f9;">{{ libro.titulo|truncatechars:25 }}</h6>
+                            <small style="color: #94a3b8;">{{ libro.autor.nombre }} {{ libro.autor.apellido }}</small>
                         </div>
                     </div>
                 </div>
                 {% empty %}
                 <div class="col-12 text-center py-4">
-                    <i class="bi bi-book display-1 text-muted mb-3"></i>
-                    <p class="text-muted">¡Próximamente más libros!</p>
+                    <i class="bi bi-book display-1" style="color: #f59e0b; opacity: 0.3;"></i>
+                    <p style="color: #94a3b8;">¡Próximamente más libros!</p>
                 </div>
                 {% endfor %}
             </div>
@@ -117,24 +112,24 @@
 <div class="col-12">
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="card border-0 h-100 text-center p-4" style="background: #fef3c7; border-radius: 20px;">
-                <i class="bi bi-lightning-charge display-3 mb-3" style="color: #f59e0b;"></i>
+            <div class="card border-0 h-100 text-center p-4 feature-card feature-fast">
+                <i class="bi bi-lightning-charge display-3 mb-3"></i>
                 <h5 class="fw-bold">Rápido y Fácil</h5>
-                <p class="text-muted small">Solicita préstamos en segundos desde cualquier lugar.</p>
+                <p class="small" style="color: #94a3b8;">Solicita préstamos en segundos desde cualquier lugar.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 h-100 text-center p-4" style="background: #dbeafe; border-radius: 20px;">
-                <i class="bi bi-shield-check display-3 mb-3" style="color: #3b82f6;"></i>
+            <div class="card border-0 h-100 text-center p-4 feature-card feature-secure">
+                <i class="bi bi-shield-check display-3 mb-3"></i>
                 <h5 class="fw-bold">100% Seguro</h5>
-                <p class="text-muted small">Tus datos están protegidos con la mejor seguridad.</p>
+                <p class="small" style="color: #94a3b8;">Tus datos están protegidos con la mejor seguridad.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 h-100 text-center p-4" style="background: #dcfce7; border-radius: 20px;">
-                <i class="bi bi-gift display-3 mb-3" style="color: #22c55e;"></i>
+            <div class="card border-0 h-100 text-center p-4 feature-card feature-free">
+                <i class="bi bi-gift display-3 mb-3"></i>
                 <h5 class="fw-bold">Totalmente Gratis</h5>
-                <p class="text-muted small">Préstamos sin costo. Solo regístrate y disfruta.</p>
+                <p class="small" style="color: #94a3b8;">Préstamos sin costo. Solo regístrate y disfruta.</p>
             </div>
         </div>
     </div>
@@ -145,30 +140,28 @@
 {% if user.is_authenticated %}
 <!-- Card Libros - TODOS VEN -->
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 20px;">
-        <div class="icon-box bg-books mx-auto">
+    <div class="card border-0 p-4 text-center dashboard-card dash-books">
+        <div class="dash-icon dash-icon-books mx-auto">
             <i class="bi bi-journal-richtext"></i>
         </div>
-        <h5 class="fw-bold">Libros</h5>
-        <p class="text-muted small">Gestión de inventario y catálogo.</p>
-        <h3 class="fw-bold mb-3 text-primary">{{ total_libros|default:"0" }}</h3>
-        <a href="{% url 'lista_libros' %}" class="btn btn-primary w-100 rounded-pill">Ver Catálogo</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Libros</h5>
+        <p class="small" style="color: #94a3b8;">Gestión de inventario y catálogo.</p>
+        <h3 class="fw-bold mb-3" style="color: #60a5fa;">{{ total_libros|default:"0" }}</h3>
+        <a href="{% url 'lista_libros' %}" class="btn-dash btn-dash-books">Ver Catálogo</a>
     </div>
 </div>
 
 <!-- Card Autores -->
 {% if puede_ver_autores %}
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); border-radius: 20px;">
-        <div class="icon-box bg-authors mx-auto">
+    <div class="card border-0 p-4 text-center dashboard-card dash-authors">
+        <div class="dash-icon dash-icon-authors mx-auto">
             <i class="bi bi-person-lines-fill"></i>
         </div>
-        <h5 class="fw-bold">Autores</h5>
-        <p class="text-muted small">Registro de escritores y biografías.</p>
-        <h3 class="fw-bold mb-3 text-info">{{ total_autores|default:"0" }}</h3>
-        <a href="{% url 'lista_autores' %}" class="btn btn-info text-white w-100 rounded-pill">Ver Autores</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Autores</h5>
+        <p class="small" style="color: #94a3b8;">Registro de escritores y biografías.</p>
+        <h3 class="fw-bold mb-3" style="color: #22d3ee;">{{ total_autores|default:"0" }}</h3>
+        <a href="{% url 'lista_autores' %}" class="btn-dash btn-dash-authors">Ver Autores</a>
     </div>
 </div>
 {% endif %}
@@ -176,15 +169,14 @@
 <!-- Card Stock -->
 {% if rol_usuario == 'bodeguero' or rol_usuario == 'admin' or rol_usuario == 'superusuario' %}
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 20px;">
-        <div class="icon-box mx-auto" style="background: #86efac; color: #16a34a;">
+    <div class="card border-0 p-4 text-center dashboard-card dash-stock">
+        <div class="dash-icon dash-icon-stock mx-auto">
             <i class="bi bi-box-seam"></i>
         </div>
-        <h5 class="fw-bold">Stock</h5>
-        <p class="text-muted small">Control de inventario de libros.</p>
-        <h3 class="fw-bold mb-3 text-success">{{ total_stock|default:"0" }}</h3>
-        <a href="{% url 'gestionar_stock' %}" class="btn btn-success w-100 rounded-pill">
+        <h5 class="fw-bold" style="color: #f1f5f9;">Stock</h5>
+        <p class="small" style="color: #94a3b8;">Control de inventario de libros.</p>
+        <h3 class="fw-bold mb-3" style="color: #4ade80;">{{ total_stock|default:"0" }}</h3>
+        <a href="{% url 'gestionar_stock' %}" class="btn-dash btn-dash-stock">
             {% if rol_usuario == 'bodeguero' %}Editar Stock{% else %}Ver Stock{% endif %}
         </a>
     </div>
@@ -194,16 +186,14 @@
 <!-- Card Préstamos -->
 {% if puede_ver_prestamos %}
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 20px;">
-        <div class="icon-box bg-loans mx-auto">
+    <div class="card border-0 p-4 text-center dashboard-card dash-loans">
+        <div class="dash-icon dash-icon-loans mx-auto">
             <i class="bi bi-calendar-check"></i>
         </div>
-        <h5 class="fw-bold">Préstamos</h5>
-        <p class="text-muted small">Control de salidas y devoluciones.</p>
-        <h3 class="fw-bold mb-3" style="color: #d97706;">{{ total_prestamos|default:"0" }}</h3>
-        <a href="{% url 'lista_prestamos' %}" class="btn w-100 rounded-pill"
-            style="background: #f59e0b; color: white;">Gestionar</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Préstamos</h5>
+        <p class="small" style="color: #94a3b8;">Control de salidas y devoluciones.</p>
+        <h3 class="fw-bold mb-3" style="color: #f59e0b;">{{ total_prestamos|default:"0" }}</h3>
+        <a href="{% url 'lista_prestamos' %}" class="btn-dash btn-dash-loans">Gestionar</a>
     </div>
 </div>
 {% endif %}
@@ -211,15 +201,14 @@
 <!-- Card Multas -->
 {% if puede_ver_multas %}
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); border-radius: 20px;">
-        <div class="icon-box bg-fines mx-auto">
+    <div class="card border-0 p-4 text-center dashboard-card dash-fines">
+        <div class="dash-icon dash-icon-fines mx-auto">
             <i class="bi bi-exclamation-octagon"></i>
         </div>
-        <h5 class="fw-bold">Multas</h5>
-        <p class="text-muted small">Sanciones y pagos pendientes.</p>
-        <h3 class="fw-bold mb-3 text-danger">${{ total_multas|default:"0" }}</h3>
-        <a href="{% url 'lista_multas' %}" class="btn btn-danger w-100 rounded-pill">Ver Reporte</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Multas</h5>
+        <p class="small" style="color: #94a3b8;">Sanciones y pagos pendientes.</p>
+        <h3 class="fw-bold mb-3" style="color: #f87171;">${{ total_multas|default:"0" }}</h3>
+        <a href="{% url 'lista_multas' %}" class="btn-dash btn-dash-fines">Ver Reporte</a>
     </div>
 </div>
 {% endif %}
@@ -227,29 +216,304 @@
 <!-- Card Solicitudes -->
 {% if puede_ver_solicitudes %}
 <div class="col-md-6 col-lg-3">
-    <div class="card border-0 p-4 text-center"
-        style="background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-radius: 20px;">
-        <div class="icon-box mx-auto" style="background: #d8b4fe; color: #9333ea;">
+    <div class="card border-0 p-4 text-center dashboard-card dash-requests">
+        <div class="dash-icon dash-icon-requests mx-auto">
             <i class="bi bi-journal-bookmark"></i>
         </div>
 
         {% if puede_gestionar_solicitudes %}
-        <h5 class="fw-bold">Gestión Solicitudes</h5>
-        <p class="text-muted small">Administrar peticiones de préstamos.</p>
-        <!-- Aquí idealmente mostraríamos el total de pendientes, pero usaremos un icono o texto genérico si no tenemos la variable -->
-        <h3 class="fw-bold mb-3" style="color: #9333ea;"><i class="bi bi-inbox"></i></h3>
-        <a href="{% url 'lista_solicitudes' %}" class="btn w-100 rounded-pill"
-            style="background: #9333ea; color: white;">Gestionar</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Gestión Solicitudes</h5>
+        <p class="small" style="color: #94a3b8;">Administrar peticiones de préstamos.</p>
+        <h3 class="fw-bold mb-3" style="color: #c084fc;"><i class="bi bi-inbox"></i></h3>
+        <a href="{% url 'lista_solicitudes' %}" class="btn-dash btn-dash-requests">Gestionar</a>
         {% else %}
-        <h5 class="fw-bold">Solicitudes</h5>
-        <p class="text-muted small">Solicitar préstamos de libros.</p>
-        <h3 class="fw-bold mb-3" style="color: #9333ea;">{{ mis_solicitudes|default:"0" }}</h3>
-        <a href="{% url 'mis_solicitudes' %}" class="btn w-100 rounded-pill"
-            style="background: #9333ea; color: white;">Mis Solicitudes</a>
+        <h5 class="fw-bold" style="color: #f1f5f9;">Solicitudes</h5>
+        <p class="small" style="color: #94a3b8;">Solicitar préstamos de libros.</p>
+        <h3 class="fw-bold mb-3" style="color: #c084fc;">{{ mis_solicitudes|default:"0" }}</h3>
+        <a href="{% url 'mis_solicitudes' %}" class="btn-dash btn-dash-requests">Mis Solicitudes</a>
         {% endif %}
     </div>
 </div>
 {% endif %}
 {% endif %}
+
+<style>
+    /* ========== HOME PAGE DARK THEME ========== */
+
+    /* Welcome Card */
+    .welcome-card {
+        background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #a855f7 100%);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    .btn-welcome-primary {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .btn-welcome-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+        color: #000;
+    }
+
+    .btn-welcome-secondary {
+        display: inline-flex;
+        align-items: center;
+        background: transparent;
+        color: #fff;
+        padding: 0.8rem 2rem;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-welcome-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #fff;
+        color: #fff;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        border-radius: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-books {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    }
+
+    .stat-authors {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    }
+
+    .stat-satisfaction {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    }
+
+    /* Catalog Card */
+    .catalog-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+    }
+
+    .btn-catalog {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-catalog:hover {
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    .book-preview-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .book-preview-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .book-preview-img {
+        height: 180px;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(234, 88, 12, 0.1) 100%);
+    }
+
+    .badge-available {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    }
+
+    .badge-unavailable {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        color: #f1f5f9;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .feature-fast i {
+        color: #f59e0b;
+    }
+
+    .feature-secure i {
+        color: #3b82f6;
+    }
+
+    .feature-free i {
+        color: #22c55e;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .dash-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .dash-icon-books {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+    }
+
+    .dash-icon-authors {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: #fff;
+    }
+
+    .dash-icon-stock {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+    }
+
+    .dash-icon-loans {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+    }
+
+    .dash-icon-fines {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+    }
+
+    .dash-icon-requests {
+        background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+        color: #fff;
+    }
+
+    .btn-dash {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .btn-dash-books {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+    }
+
+    .btn-dash-authors {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: #fff;
+    }
+
+    .btn-dash-stock {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+    }
+
+    .btn-dash-loans {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+    }
+
+    .btn-dash-fines {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+    }
+
+    .btn-dash-requests {
+        background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+        color: #fff;
+    }
+
+    .btn-dash:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        color: #fff;
+    }
+
+    .btn-dash-loans:hover {
+        color: #000;
+    }
+</style>
 
 {% endblock %}

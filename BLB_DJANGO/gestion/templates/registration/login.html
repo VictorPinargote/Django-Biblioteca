@@ -2,12 +2,11 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow border-0" style="max-width: 480px; margin: 0 auto; border-radius: 24px; overflow: hidden;">
-        <!-- Header con gradiente vibrante -->
-        <div class="card-header text-white py-5 text-center"
-            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="card shadow-lg border-0 login-card">
+        <!-- Header -->
+        <div class="card-header login-header text-white py-5 text-center">
             <div class="mb-3">
-                <i class="bi bi-person-circle display-3"></i>
+                <i class="bi bi-book-half display-3" style="color: #f59e0b;"></i>
             </div>
             <h3 class="mb-0 fw-bold">Bienvenido de Nuevo</h3>
             <p class="mb-0 mt-2 opacity-75">Ingresa tus credenciales para continuar</p>
@@ -15,8 +14,7 @@
 
         <div class="card-body p-5">
             {% if form.errors %}
-            <div class="alert rounded-3 mb-4"
-                style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 1px solid #fecaca; color: #dc2626;">
+            <div class="alert alert-error mb-4">
                 <i class="bi bi-exclamation-circle me-2"></i>Usuario o contraseña incorrectos
             </div>
             {% endif %}
@@ -26,32 +24,30 @@
 
                 <div class="mb-4">
                     <label for="id_username" class="form-label fw-semibold">
-                        <i class="bi bi-person me-2" style="color: #764ba2;"></i>Usuario
+                        <i class="bi bi-person me-2" style="color: #f59e0b;"></i>Usuario
                     </label>
-                    <input type="text" name="username" id="id_username" class="form-control form-control-lg rounded-3"
-                        style="border: 2px solid #e0e7ff; padding: 14px;" placeholder="Tu nombre de usuario" required>
+                    <input type="text" name="username" id="id_username" class="form-control form-control-lg"
+                        placeholder="Tu nombre de usuario" required>
                 </div>
 
                 <div class="mb-4">
                     <label for="id_password" class="form-label fw-semibold">
-                        <i class="bi bi-lock me-2" style="color: #764ba2;"></i>Contraseña
+                        <i class="bi bi-lock me-2" style="color: #f59e0b;"></i>Contraseña
                     </label>
-                    <input type="password" name="password" id="id_password"
-                        class="form-control form-control-lg rounded-3" style="border: 2px solid #e0e7ff; padding: 14px;"
+                    <input type="password" name="password" id="id_password" class="form-control form-control-lg"
                         placeholder="Tu contraseña" required>
                 </div>
 
                 <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-lg rounded-pill fw-bold py-3"
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                    <button type="submit" class="btn btn-login">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
                     </button>
                 </div>
 
                 <div class="text-center mt-4">
-                    <p class="text-muted mb-0">
+                    <p class="mb-0" style="color: #94a3b8;">
                         ¿No tienes cuenta?
-                        <a href="{% url 'registro' %}" class="fw-bold" style="color: #764ba2; text-decoration: none;">
+                        <a href="{% url 'registro' %}" class="register-link">
                             Regístrate aquí
                         </a>
                     </p>
@@ -60,4 +56,57 @@
         </div>
     </div>
 </div>
+
+<style>
+    .login-card {
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+    }
+
+    .alert-error {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+        color: #000;
+    }
+
+    .register-link {
+        color: #f59e0b;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .register-link:hover {
+        color: #fbbf24;
+    }
+</style>
 {% endblock %}

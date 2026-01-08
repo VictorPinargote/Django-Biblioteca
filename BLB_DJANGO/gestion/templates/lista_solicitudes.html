@@ -3,18 +3,18 @@
 {% block contenido %}
 <div class="col-12">
     <!-- Solicitudes Pendientes -->
-    <div class="card shadow border-0 rounded-4 mb-4">
-        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-            <h3 class="mb-0 fw-bold">
-                <i class="bi bi-hourglass-split me-2"></i>Solicitudes Pendientes
-                <span class="badge bg-light text-dark ms-2">{{ solicitudes_pendientes|length }}</span>
+    <div class="card shadow-lg requests-card mb-4">
+        <div class="card-header requests-header py-4">
+            <h3 class="mb-0 fw-bold text-white">
+                <i class="bi bi-hourglass-split me-2" style="color: #f59e0b;"></i>Solicitudes Pendientes
+                <span class="badge count-badge ms-2">{{ solicitudes_pendientes|length }}</span>
             </h3>
         </div>
         <div class="card-body p-4">
             {% if solicitudes_pendientes %}
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle requests-table">
+                    <thead>
                         <tr>
                             <th>Usuario</th>
                             <th>Libro</th>
@@ -27,28 +27,29 @@
                         {% for solicitud in solicitudes_pendientes %}
                         <tr>
                             <td>
-                                <strong>{{ solicitud.usuario.first_name }} {{ solicitud.usuario.last_name }}</strong>
+                                <strong style="color: #f1f5f9;">{{ solicitud.usuario.first_name }} {{
+                                    solicitud.usuario.last_name }}</strong>
                                 <br><small class="text-muted">@{{ solicitud.usuario.username }}</small>
                             </td>
                             <td>
-                                <strong>{{ solicitud.libro.titulo }}</strong>
+                                <strong style="color: #f1f5f9;">{{ solicitud.libro.titulo }}</strong>
                                 <br><small class="text-muted">{{ solicitud.libro.autor }}</small>
                             </td>
                             <td>
-                                <span class="badge bg-secondary">{{ solicitud.dias_solicitados }} días</span>
+                                <span class="badge days-badge">{{ solicitud.dias_solicitados }} días</span>
                             </td>
-                            <td>{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                            <td class="date-cell">{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</td>
                             <td>
-                                <div class="btn-group" role="group">
+                                <div class="action-buttons">
                                     <form method="POST" action="{% url 'aprobar_solicitud' solicitud.id %}"
                                         class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-success btn-sm rounded-start">
+                                        <button type="submit" class="btn-approve">
                                             <i class="bi bi-check-lg me-1"></i>Aprobar
                                         </button>
                                     </form>
-                                    <button type="button" class="btn btn-danger btn-sm rounded-end"
-                                        data-bs-toggle="modal" data-bs-target="#rechazarModal{{ solicitud.id }}">
+                                    <button type="button" class="btn-reject" data-bs-toggle="modal"
+                                        data-bs-target="#rechazarModal{{ solicitud.id }}">
                                         <i class="bi bi-x-lg me-1"></i>Rechazar
                                     </button>
                                 </div>
@@ -56,19 +57,19 @@
                                 <!-- Modal para rechazar -->
                                 <div class="modal fade" id="rechazarModal{{ solicitud.id }}" tabindex="-1">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content reject-modal">
                                             <form method="POST" action="{% url 'rechazar_solicitud' solicitud.id %}">
                                                 {% csrf_token %}
-                                                <div class="modal-header bg-danger text-white">
-                                                    <h5 class="modal-title">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-white">
                                                         <i class="bi bi-x-circle me-2"></i>Rechazar Solicitud
                                                     </h5>
                                                     <button type="button" class="btn-close btn-close-white"
                                                         data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>¿Estás seguro de rechazar la solicitud de <strong>{{
-                                                            solicitud.usuario.first_name }}</strong>
+                                                    <p style="color: #e2e8f0;">¿Estás seguro de rechazar la solicitud de
+                                                        <strong>{{ solicitud.usuario.first_name }}</strong>
                                                         para el libro <strong>{{ solicitud.libro.titulo }}</strong>?</p>
                                                     <div class="mb-3">
                                                         <label class="form-label">Motivo del rechazo:</label>
@@ -77,9 +78,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
+                                                    <button type="button" class="btn-modal-cancel"
                                                         data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">
+                                                    <button type="submit" class="btn-modal-reject">
                                                         <i class="bi bi-x-circle me-1"></i>Rechazar
                                                     </button>
                                                 </div>
@@ -94,26 +95,26 @@
                 </table>
             </div>
             {% else %}
-            <div class="text-center py-4">
-                <i class="bi bi-check-circle display-4 text-success"></i>
-                <h5 class="mt-3 text-muted">No hay solicitudes pendientes</h5>
-                <p class="text-muted">Todas las solicitudes han sido procesadas</p>
+            <div class="text-center py-4 empty-state">
+                <i class="bi bi-check-circle display-4" style="color: #22c55e;"></i>
+                <h5 class="mt-3" style="color: #f1f5f9;">No hay solicitudes pendientes</h5>
+                <p style="color: #94a3b8;">Todas las solicitudes han sido procesadas</p>
             </div>
             {% endif %}
         </div>
     </div>
 
     <!-- Historial de Solicitudes Procesadas -->
-    <div class="card shadow border-0 rounded-4">
-        <div class="card-header py-3 bg-light">
-            <h5 class="mb-0">
-                <i class="bi bi-clock-history me-2"></i>Historial Reciente
+    <div class="card shadow-lg requests-card">
+        <div class="card-header history-header py-3">
+            <h5 class="mb-0" style="color: #f1f5f9;">
+                <i class="bi bi-clock-history me-2" style="color: #f59e0b;"></i>Historial Reciente
             </h5>
         </div>
         <div class="card-body p-4">
             {% if solicitudes_procesadas %}
             <div class="table-responsive">
-                <table class="table table-sm">
+                <table class="table table-sm requests-table">
                     <thead>
                         <tr>
                             <th>Usuario</th>
@@ -126,26 +127,171 @@
                     <tbody>
                         {% for solicitud in solicitudes_procesadas %}
                         <tr>
-                            <td>{{ solicitud.usuario.username }}</td>
-                            <td>{{ solicitud.libro.titulo }}</td>
+                            <td style="color: #e2e8f0;">{{ solicitud.usuario.username }}</td>
+                            <td style="color: #e2e8f0;">{{ solicitud.libro.titulo }}</td>
                             <td>
                                 {% if solicitud.estado == 'aprobada' %}
-                                <span class="badge bg-success">Aprobada</span>
+                                <span class="badge status-approved">Aprobada</span>
                                 {% else %}
-                                <span class="badge bg-danger">Rechazada</span>
+                                <span class="badge status-rejected">Rechazada</span>
                                 {% endif %}
                             </td>
-                            <td>{{ solicitud.respondido_por.username|default:"-" }}</td>
-                            <td>{{ solicitud.fecha_respuesta|date:"d/m/Y" }}</td>
+                            <td style="color: #94a3b8;">{{ solicitud.respondido_por.username|default:"-" }}</td>
+                            <td style="color: #94a3b8;">{{ solicitud.fecha_respuesta|date:"d/m/Y" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% else %}
-            <p class="text-muted text-center mb-0">No hay historial aún</p>
+            <p class="text-center mb-0" style="color: #64748b;">No hay historial aún</p>
             {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+    .requests-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .requests-header {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    }
+
+    .history-header {
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .count-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .requests-table {
+        color: #e2e8f0;
+    }
+
+    .requests-table thead {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .requests-table thead th {
+        color: #94a3b8;
+        font-weight: 600;
+        border: none;
+    }
+
+    .requests-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .requests-table tbody tr:hover {
+        background: rgba(245, 158, 11, 0.08);
+    }
+
+    .days-badge {
+        background: rgba(100, 116, 139, 0.3);
+        color: #94a3b8;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+    }
+
+    .date-cell {
+        color: #94a3b8;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-approve {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-approve:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal Styles */
+    .reject-modal {
+        background: rgba(30, 41, 59, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+    }
+
+    .reject-modal .modal-header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        border: none;
+    }
+
+    .reject-modal .modal-footer {
+        border: none;
+    }
+
+    .btn-modal-cancel {
+        background: rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-modal-cancel:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .btn-modal-reject {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .status-approved {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    }
+
+    .status-rejected {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+</style>
 {% endblock %}

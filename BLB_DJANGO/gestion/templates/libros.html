@@ -2,28 +2,22 @@
 
 {% block contenido %}
 <div class="col-12">
-    <!-- Main Container with modern backdrop -->
-    <div class="card border-0 shadow-lg" style="border-radius: 30px; overflow: hidden; background-color: #f8fafc;">
+    <!-- Main Container with dark theme -->
+    <div class="card border-0 shadow-lg library-main-card">
 
         <!-- Header Section -->
-        <div class="card-header position-relative border-0 py-5"
-            style="background: linear-gradient(120deg, #2563eb 0%, #7c3aed 100%); overflow: hidden;">
-
-
-
+        <div class="card-header position-relative border-0 py-5 library-header">
             <div class="container position-relative z-index-1">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div class="text-white">
                         <h2 class="fw-bold mb-1 display-6">
-                            <i class="bi bi-collection-play me-2"></i>Biblioteca Digital
+                            <i class="bi bi-book-half me-2" style="color: #f59e0b;"></i>Biblioteca Digital
                         </h2>
                         <p class="mb-0 fs-5 opacity-75 fw-light">Explora y gestiona tu colección literaria</p>
                     </div>
                     {% if puede_gestionar_libros %}
-                    <a href="{% url 'crear_libro' %}"
-                        class="btn btn-light btn-lg rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2 hover-scale">
-                        <i class="bi bi-plus-lg text-primary"></i>
-                        <span>Nuevo Libro</span>
+                    <a href="{% url 'crear_libro' %}" class="btn-library-action">
+                        <i class="bi bi-plus-lg me-2"></i>Nuevo Libro
                     </a>
                     {% endif %}
                 </div>
@@ -36,77 +30,73 @@
             <div class="row g-4">
                 {% for libro in libros %}
                 <div class="col-sm-6 col-md-4 col-xl-3">
-                    <a href="{% url 'detalle_libro' libro.id %}" class="text-decoration-none text-dark">
-                        <div class="card h-100 border-0 shadow-sm book-card position-relative bg-white">
+                    <a href="{% url 'detalle_libro' libro.id %}" class="text-decoration-none">
+                        <div class="card h-100 book-card position-relative">
 
                             <!-- Status Badge (Floating) -->
                             <div class="position-absolute top-0 end-0 m-3 z-index-2">
                                 {% if libro.disponible %}
-                                <span class="badge rounded-pill bg-success bg-gradient shadow-sm px-3 py-2">
+                                <span class="badge rounded-pill px-3 py-2"
+                                    style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
                                     <i class="bi bi-check-lg me-1"></i>Disponible
                                 </span>
                                 {% else %}
-                                <span class="badge rounded-pill bg-danger bg-gradient shadow-sm px-3 py-2">
+                                <span class="badge rounded-pill px-3 py-2"
+                                    style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
                                     <i class="bi bi-clock-history me-1"></i>Prestado
                                 </span>
                                 {% endif %}
                             </div>
 
                             <!-- Image Container -->
-                            <div class="card-img-top position-relative overflow-hidden bg-light d-flex align-items-center justify-content-center"
-                                style="height: 260px; border-radius: 20px 20px 0 0;">
+                            <div class="card-img-top position-relative overflow-hidden book-image-container">
                                 {% if libro.imagen %}
                                 <img src="{{ libro.imagen.url }}" alt="{{ libro.titulo }}"
-                                    class="w-100 h-100 object-fit-cover transition-transform">
+                                    class="w-100 h-100 object-fit-cover book-img">
                                 {% else %}
-                                <div class="text-center p-4 opacity-50">
-                                    <i class="bi bi-journal-album display-1 text-secondary"></i>
-                                    <p class="small fw-semibold mt-2 text-secondary">Sin Portada</p>
-                                </div>
-                                <!-- Decorative gradient overlay for missing images -->
-                                <div class="position-absolute top-0 start-0 w-100 h-100"
-                                    style="background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 100%);">
+                                <div class="text-center p-4 no-image-placeholder">
+                                    <i class="bi bi-journal-album display-1"></i>
+                                    <p class="small fw-semibold mt-2">Sin Portada</p>
                                 </div>
                                 {% endif %}
 
                                 <!-- Hover Overlay -->
                                 <div
-                                    class="book-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center opacity-0 transition-opacity">
-                                    <span class="btn btn-light rounded-circle shadow p-3">
-                                        <i class="bi bi-eye-fill text-primary fs-4"></i>
+                                    class="book-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <span class="btn-view-detail">
+                                        <i class="bi bi-eye-fill fs-4"></i>
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Content -->
                             <div class="card-body p-4">
-                                <!-- Categories/Tags (Optional placeholder) -->
+                                <!-- Year Badge -->
                                 <div class="mb-2">
-                                    <span
-                                        class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2 py-1 small">
-                                        {{ libro.anio_publicacion|default:"General" }}
+                                    <span class="badge year-badge">
+                                        <i class="bi bi-calendar3 me-1"></i>{{ libro.anio_publicacion|default:"General"
+                                        }}
                                     </span>
                                 </div>
 
-                                <h5 class="card-title fw-bold mb-2 text-truncate-2"
-                                    style="font-size: 1.1rem; min-height: 2.8rem; line-height: 1.4;">
+                                <h5 class="card-title fw-bold mb-2 book-title">
                                     {{ libro.titulo }}
                                 </h5>
 
-                                <div class="d-flex align-items-center text-muted mb-3">
-                                    <i class="bi bi-person-circle me-2 text-secondary"></i>
-                                    <span class="small fw-medium text-truncate">{{ libro.autor.nombre }} {{
-                                        libro.autor.apellido }}</span>
+                                <div class="d-flex align-items-center mb-3 book-author">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span class="small fw-medium text-truncate">
+                                        {{ libro.autor.nombre }} {{ libro.autor.apellido }}
+                                    </span>
                                 </div>
 
-                                <hr class="border-secondary opacity-10 my-3">
+                                <hr class="divider-line">
 
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted fw-bold">
-                                        <i class="bi bi-box-seam me-1 text-warning"></i>Stock: {{ libro.stock }}
+                                    <small class="stock-info">
+                                        <i class="bi bi-box-seam me-1"></i>Stock: {{ libro.stock }}
                                     </small>
-                                    <div
-                                        class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold small-btn">
+                                    <div class="btn-detail">
                                         Ver Detalle
                                     </div>
                                 </div>
@@ -118,16 +108,16 @@
             </div>
             {% else %}
             <!-- Empty State -->
-            <div class="text-center py-5">
+            <div class="text-center py-5 empty-state">
                 <div class="mb-4 position-relative d-inline-block">
-                    <div class="position-absolute top-50 start-50 translate-middle bg-primary opacity-10 rounded-circle"
-                        style="width: 120px; height: 120px;"></div>
-                    <i class="bi bi-journal-bookmark display-1 text-primary position-relative z-index-1"></i>
+                    <div class="empty-icon-bg"></div>
+                    <i class="bi bi-journal-bookmark display-1 position-relative z-index-1" style="color: #f59e0b;"></i>
                 </div>
-                <h3 class="fw-bold text-dark mb-2">Tu biblioteca está vacía</h3>
-                <p class="text-muted mb-4 fs-5">Parece que aún no has agregado ningún libro a la colección.</p>
+                <h3 class="fw-bold mb-2">Tu biblioteca está vacía</h3>
+                <p class="mb-4 fs-5" style="color: #94a3b8;">Parece que aún no has agregado ningún libro a la colección.
+                </p>
                 {% if puede_ver_autores %}
-                <a href="{% url 'crear_libro' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-scale">
+                <a href="{% url 'crear_libro' %}" class="btn-library-action">
                     <i class="bi bi-plus-circle me-2"></i>Agregar Primer Libro
                 </a>
                 {% endif %}
@@ -138,58 +128,175 @@
 </div>
 
 <style>
-    /* Custom Styles for Books Page */
-    .hover-scale {
-        transition: transform 0.2s ease;
+    /* ========== LIBRARY PAGE DARK THEME ========== */
+    .library-main-card {
+        border-radius: 30px;
+        overflow: hidden;
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .hover-scale:hover {
-        transform: scale(1.05);
+    .library-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #1e40af 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    .btn-library-action {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #000;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .btn-library-action:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+        color: #000;
+    }
+
+    /* Book Cards */
     .book-card {
         border-radius: 20px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: #ffffff;
+        overflow: hidden;
     }
 
     .book-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        border-color: rgba(245, 158, 11, 0.3);
     }
 
-    .text-truncate-2 {
+    .book-image-container {
+        height: 260px;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .no-image-placeholder {
+        color: #475569;
+    }
+
+    .book-img {
+        transition: transform 0.5s ease;
+    }
+
+    .book-card:hover .book-img {
+        transform: scale(1.1);
+    }
+
+    .book-overlay {
+        opacity: 0;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(4px);
+        transition: all 0.3s ease;
+    }
+
+    .book-card:hover .book-overlay {
+        opacity: 1;
+    }
+
+    .btn-view-detail {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        transition: transform 0.3s ease;
+    }
+
+    .btn-view-detail:hover {
+        transform: scale(1.1);
+    }
+
+    .book-title {
+        font-size: 1.1rem;
+        min-height: 2.8rem;
+        line-height: 1.4;
+        color: #f1f5f9;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
 
+    .year-badge {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+    }
+
+    .book-author {
+        color: #94a3b8;
+    }
+
+    .divider-line {
+        border-color: rgba(255, 255, 255, 0.1);
+        margin: 1rem 0;
+    }
+
+    .stock-info {
+        color: #f59e0b;
+        font-weight: 600;
+    }
+
+    .btn-detail {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-detail:hover {
+        background: #3b82f6;
+        color: #fff;
+    }
+
+    .empty-state h3 {
+        color: #f1f5f9;
+    }
+
+    .empty-icon-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        background: rgba(245, 158, 11, 0.15);
+        border-radius: 50%;
+    }
+
     .object-fit-cover {
         object-fit: cover;
     }
 
-    .book-card:hover .book-overlay {
-        opacity: 1 !important;
-        background: rgba(30, 64, 175, 0.3);
-        /* Blue tinted overlay */
-        backdrop-filter: blur(2px);
+    .z-index-1 {
+        z-index: 1;
     }
 
-    .transition-opacity {
-        transition: opacity 0.3s ease;
-    }
-
-    .transition-transform {
-        transition: transform 0.5s ease;
-    }
-
-    .book-card:hover img {
-        transform: scale(1.1);
-    }
-
-    .small-btn {
-        font-size: 0.8rem;
+    .z-index-2 {
+        z-index: 2;
     }
 </style>
 {% endblock %}

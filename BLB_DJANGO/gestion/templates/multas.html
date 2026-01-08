@@ -2,19 +2,18 @@
 
 {% block contenido %}
 <div class="col-12">
-    <div class="card shadow border-0" style="border-radius: 24px; overflow: hidden;">
-        <!-- Header con gradiente rojo vibrante -->
-        <div class="card-header text-white py-4"
-            style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);">
+    <div class="card shadow-lg fines-card">
+        <!-- Header -->
+        <div class="card-header fines-header py-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h3 class="mb-0 fw-bold">
-                        <i class="bi bi-exclamation-octagon-fill me-2"></i>Registro de Multas
+                    <h3 class="mb-0 fw-bold text-white">
+                        <i class="bi bi-exclamation-octagon-fill me-2" style="color: #fbbf24;"></i>Registro de Multas
                     </h3>
-                    <p class="mb-0 mt-1 opacity-75">Control de sanciones y pagos</p>
+                    <p class="mb-0 mt-1 opacity-75 text-white">Control de sanciones y pagos</p>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div class="text-center px-4 py-2 rounded-3" style="background: rgba(255,255,255,0.2);">
+                    <div class="stats-box">
                         <span class="d-block fs-4 fw-bold">{{ multas.count }}</span>
                         <small class="opacity-75">Total Multas</small>
                     </div>
@@ -23,15 +22,15 @@
         </div>
 
         <!-- Body -->
-        <div class="card-body p-4" style="background: linear-gradient(180deg, #fef2f2 0%, #ffffff 100%);">
+        <div class="card-body p-4">
             {% if multas.exists %}
             <div class="row g-4">
                 {% for multa in multas %}
                 <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden;">
+                    <div class="card fine-card h-100">
                         <!-- Header tipo -->
-                        <div class="card-header border-0 py-3"
-                            style="{% if multa.tipo == 'r' %}background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);{% elif multa.tipo == 'p' %}background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);{% else %}background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);{% endif %} color: white;">
+                        <div
+                            class="card-header fine-type-header py-3 {% if multa.tipo == 'r' %}type-delay{% elif multa.tipo == 'p' %}type-lost{% else %}type-damage{% endif %}">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">
                                     {% if multa.tipo == 'r' %}
@@ -42,40 +41,37 @@
                                     <i class="bi bi-exclamation-triangle me-1"></i>Deterioro
                                     {% endif %}
                                 </span>
-                                <span class="badge bg-white text-dark">#{{ multa.id }}</span>
+                                <span class="badge fine-id-badge">#{{ multa.id }}</span>
                             </div>
                         </div>
 
                         <div class="card-body">
-                            <h5 class="fw-bold mb-3" style="color: #dc2626;">${{ multa.monto }}</h5>
+                            <h5 class="fw-bold mb-3 fine-amount">${{ multa.monto }}</h5>
 
-                            <p class="mb-2">
-                                <i class="bi bi-book me-2 text-primary"></i>
-                                <small class="text-muted">{{ multa.prestamo.libro.titulo|truncatechars:30 }}</small>
+                            <p class="mb-2 fine-info">
+                                <i class="bi bi-book me-2"></i>
+                                <small>{{ multa.prestamo.libro.titulo|truncatechars:30 }}</small>
                             </p>
-                            <p class="mb-2">
-                                <i class="bi bi-person me-2 text-info"></i>
-                                <small class="text-muted">{{ multa.prestamo.usuario.username }}</small>
+                            <p class="mb-2 fine-info">
+                                <i class="bi bi-person me-2"></i>
+                                <small>{{ multa.prestamo.usuario.username }}</small>
                             </p>
-                            <p class="mb-3">
-                                <i class="bi bi-calendar me-2 text-secondary"></i>
-                                <small class="text-muted">{{ multa.fecha }}</small>
+                            <p class="mb-3 fine-info">
+                                <i class="bi bi-calendar me-2"></i>
+                                <small>{{ multa.fecha }}</small>
                             </p>
 
                             <div class="d-flex justify-content-between align-items-center">
                                 {% if multa.pagada %}
-                                <span class="badge rounded-pill px-3 py-2"
-                                    style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                                <span class="badge status-paid">
                                     <i class="bi bi-check-circle me-1"></i>Pagada
                                 </span>
                                 {% else %}
-                                <span class="badge rounded-pill px-3 py-2"
-                                    style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                                <span class="badge status-pending">
                                     <i class="bi bi-clock me-1"></i>Pendiente
                                 </span>
                                 {% if puede_ver_multas %}
-                                <a href="{% url 'pagar_multa' multa.id %}" class="btn btn-sm rounded-pill"
-                                    style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white;">
+                                <a href="{% url 'pagar_multa' multa.id %}" class="btn-pay">
                                     <i class="bi bi-credit-card me-1"></i>Pagar
                                 </a>
                                 {% endif %}
@@ -87,16 +83,125 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="text-center py-5">
+            <div class="text-center py-5 empty-state">
                 <div class="mb-4">
-                    <i class="bi bi-emoji-smile display-1" style="color: #86efac;"></i>
+                    <i class="bi bi-emoji-smile display-1" style="color: #22c55e; opacity: 0.5;"></i>
                 </div>
-                <h4 class="fw-bold text-success mb-3">¡Excelente!</h4>
-                <p class="text-muted mb-0">No hay multas registradas</p>
-                <p class="text-muted">Todos los préstamos están al día</p>
+                <h4 class="fw-bold mb-3" style="color: #22c55e;">¡Excelente!</h4>
+                <p class="mb-0" style="color: #94a3b8;">No hay multas registradas</p>
+                <p style="color: #64748b;">Todos los préstamos están al día</p>
             </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+    /* ========== FINES PAGE DARK THEME ========== */
+    .fines-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        overflow: hidden;
+    }
+
+    .fines-header {
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stats-box {
+        text-align: center;
+        padding: 0.5rem 1.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    /* Fine Cards */
+    .fine-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .fine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .fine-type-header {
+        color: #fff;
+    }
+
+    .type-delay {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .type-lost {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    }
+
+    .type-damage {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    }
+
+    .fine-id-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+    }
+
+    .fine-amount {
+        color: #f87171;
+        font-size: 1.5rem;
+    }
+
+    .fine-info {
+        color: #94a3b8;
+    }
+
+    .fine-info i {
+        color: #64748b;
+    }
+
+    /* Status Badges */
+    .status-paid {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+    }
+
+    .btn-pay {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-pay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+        color: #fff;
+    }
+</style>
 {% endblock %}
